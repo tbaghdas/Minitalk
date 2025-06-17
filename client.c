@@ -21,6 +21,33 @@ int	ft_check_digit(char *str)
 	return (0);
 }
 
+void	ft_send(char *str, pid_t pid_serv)
+{
+	int		mask;
+	int 	i;
+	int		j;
+	float	delay;
+
+	i = 0;
+	delay = 0.0001;
+	mask = 1;
+	while (str[i] != '\0')
+	{
+		j = 0;
+		while (j < 8)
+		{
+			if(str[i] & (mask << j))
+			{
+				kill(pid_serv, SIGUSR1);
+			}
+			sleep(delay);
+			j++;
+		}
+		i++;
+	}
+	sleep(delay * 8);
+}
+
 
 int main(int argc, char** argv) {
     // if (signal(SIGINT, sigint_handler) == SIG_ERR) {
@@ -38,32 +65,13 @@ int main(int argc, char** argv) {
 		write(1, "Wrong arguments!", 16);
 		return (1);
 	}
-    pid = getpid();
-    printf("The process ID is: %d\n", pid);
+    pid = itoa(getpid());
+    printf("The process ID is: %s\n", pid);
     //printf("Press Ctrl+C to interrupt\n");
 
 	pid_serv = atoi(argv[1]);
-	i = 0;
-	//j = 0;
-	mask = 1;
-	while (argv[2][i] != '\0')
-	{
-		//SIGUSR1 = i;
-		j = 0;
-		while (j < 8)
-		{
-			if(argv[2][i] & (mask << j))
-			{
-				kill(pid_serv, SIGUSR1);
-			}
-			sleep(0.0001);
-			j++;
-		}
-		i++;
-	}
-		// while (1) {
-    //     // Program continues executing
-    // }
+	ft_send(pid, pid_serv);
+	ft_send(argv[2], pid_serv);
 
     return 0;
 }
