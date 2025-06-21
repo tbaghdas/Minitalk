@@ -1,16 +1,12 @@
-#include <stdio.h>
-#include <signal.h>
-#include <stdlib.h>
-#include <unistd.h>
+#include "minitalk.h"
 
 void sigint_handler(int sig) {
     printf("Caught signal %d\n", sig);
-    // Add cleanup code here if needed
-    exit(0); // Or use longjmp to return to previous location
+    exit(0);
 }
 int	ft_check_digit(char *str)
 {
-	while (*str != NULL)
+	while (*str != '\0')
 	{
 		if (*str < '0' || *str > '9')
 		{
@@ -29,13 +25,15 @@ void	ft_send(char *str, pid_t pid_serv)
 	float	delay;
 
 	i = 0;
-	delay = 0.0001;
+	delay = 0.01;
 	mask = 1;
 	while (str[i] != '\0')
 	{
 		j = 0;
 		while (j < 8)
 		{
+			kill(pid_serv, SIGUSR1);
+			sleep(delay);
 			if(str[i] & (mask << j))
 			{
 				kill(pid_serv, SIGUSR1);
@@ -54,7 +52,7 @@ int main(int argc, char** argv) {
     //     perror("signal");
     //     return 1;
     // }
-	pid_t 	pid;
+	char	*pid;
 	pid_t 	pid_serv;
 	int 	i;
 	int		j;
@@ -65,12 +63,11 @@ int main(int argc, char** argv) {
 		write(1, "Wrong arguments!", 16);
 		return (1);
 	}
-    pid = itoa(getpid());
+    pid = ft_itoa(getpid());
     printf("The process ID is: %s\n", pid);
-    //printf("Press Ctrl+C to interrupt\n");
 
 	pid_serv = atoi(argv[1]);
-	ft_send(pid, pid_serv);
+	// ft_send(pid, pid_serv);
 	ft_send(argv[2], pid_serv);
 
     return 0;

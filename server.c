@@ -1,32 +1,54 @@
-#include <stdio.h>
-#include <signal.h>
-#include <stdlib.h>
-#include <unistd.h>
+#include "minitalk.h"
 
-void sigint_handler(int sig) {
-    printf("Caught signal %d\n", sig);
-    // Add cleanup code here if needed
-    //exit(0); // Or use longjmp to return to previous location
+int	g_str = 1;
+
+void	sigint_handler(int sig)
+{
+	float	delay;
+
+	delay = 0.01;
+	// printf("Caught signal %d\n", sig);
+	g_str <<= 1;//////////////////////////////////////////////
+	g_str++;
+	// printf("%d\n", g_str);
+	sleep(delay);///////////////////////////////////////////////////////////////////////////
 }
 
-int main() 
+
+void	ft_write()
 {
-	int	start;
+	char	c;
 
-	start = 0;
-    if (signal(SIGUSR1, sigint_handler) == SIG_ERR) {
-        perror("signal");
-        return 1;
-    }
-	pid_t pid;
+	c = g_str & 1 | (g_str & 4) << 1 | (g_str & 16) << 2 | (g_str & 64) << 3 | (g_str & 256) << 4 | (g_str & 1024) << 5 | (g_str & 4096) << 6 | (g_str & 16384) << 7;
+	// write(1, &c, 1);
+	if (c != 0)
+	printf("%d  %d\n", c, g_str);
+}
 
-    pid = getpid();
-    printf("The process ID is: %d\n", pid);
-    printf("Press Ctrl+C to interrupt\n");
+int	main(void)
+{
+	float	delay;
+	pid_t	pid;
 
-    while (1) {
-        // Program continues executing
-    }
-
-    return 0;
+	delay = 0.01;
+	if (signal(SIGUSR1, sigint_handler) == SIG_ERR)
+	{
+		// perror("signal");
+		return (1);
+	}
+	pid = getpid();
+	printf("The process ID is: %d\n", pid);
+	while (1)
+	{
+		g_str <<= 1;
+		// g_str += 2;
+		sleep(delay);
+		if (g_str > 32767)
+		{
+			// printf("KLKL\n");
+			ft_write();
+			g_str = 0;
+		}
+	}
+	return (0);
 }
