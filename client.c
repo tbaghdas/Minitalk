@@ -25,7 +25,7 @@ void	ft_send(char *str, pid_t pid_serv)
 	float	delay;
 
 	i = 0;
-	delay = 0.01;
+	delay = 1;
 	mask = 1;
 	while (str[i] != '\0')
 	{
@@ -33,10 +33,12 @@ void	ft_send(char *str, pid_t pid_serv)
 		while (j < 8)
 		{
 			kill(pid_serv, SIGUSR1);
+			// printf("0 , %d\n", j);
 			sleep(delay);
 			if(str[i] & (mask << j))
 			{
 				kill(pid_serv, SIGUSR1);
+				// write(1, "1\n", 2);
 			}
 			sleep(delay);
 			j++;
