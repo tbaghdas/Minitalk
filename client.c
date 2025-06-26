@@ -1,6 +1,12 @@
 #include "minitalk.h"
 
+int	g_count = 0;
+
 void sigint_handler(int sig) {
+	if (sig == SIGUSR1)
+	{
+		g_count++;
+	}
     printf("Caught signal %d\n", sig);
     exit(0);
 }
@@ -49,11 +55,12 @@ void	ft_send(char *str, pid_t pid_serv)
 }
 
 
-int main(int argc, char** argv) {
-    // if (signal(SIGINT, sigint_handler) == SIG_ERR) {
-    //     perror("signal");
-    //     return 1;
-    // }
+int main(int argc, char** argv)
+{
+    if (signal(SIGUSR1, sigint_handler) == SIG_ERR) {
+        // perror("signal");
+        return 1;
+    }
 	char	*pid;
 	pid_t 	pid_serv;
 	int 	i;
@@ -71,6 +78,9 @@ int main(int argc, char** argv) {
 	pid_serv = atoi(argv[1]);
 	// ft_send(pid, pid_serv);
 	ft_send(argv[2], pid_serv);
-
+	if (strlen(argv[2]) == g_count)
+	{
+		print miban;
+	}
     return 0;
 }
