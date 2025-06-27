@@ -31,7 +31,7 @@ void	ft_send(char *str, pid_t pid_serv)
 	float	delay;
 
 	i = 0;
-	delay = 1;
+	delay = 0.7;
 	mask = 1;
 	while (str[i] != '\0')
 	{
@@ -39,19 +39,24 @@ void	ft_send(char *str, pid_t pid_serv)
 		while (j < 8)
 		{
 			kill(pid_serv, SIGUSR1);
-			// printf("0 , %d\n", j);
+			 printf("SIGUSR1 clock , j-%d\n", j);
 			sleep(delay);
 			if(str[i] & (mask << j))
 			{
 				kill(pid_serv, SIGUSR1);
-				// write(1, "1\n", 2);
+				 write(1, "1\n", 2);
+			}
+			else
+			{
+				kill(pid_serv, SIGUSR2);
+				 write(1, "2\n", 2);
 			}
 			sleep(delay);
 			j++;
 		}
 		i++;
+		sleep(delay * 8);
 	}
-	sleep(delay * 8);
 }
 
 
@@ -60,7 +65,11 @@ int main(int argc, char** argv)
     if (signal(SIGUSR1, sigint_handler) == SIG_ERR) {
         // perror("signal");
         return 1;
-    }
+    }    
+	// if (signal(SIGUSR2, sigint_handler) == SIG_ERR) {
+    //     // perror("signal");
+    //     return 1;
+    // }
 	char	*pid;
 	pid_t 	pid_serv;
 	int 	i;
@@ -78,9 +87,9 @@ int main(int argc, char** argv)
 	pid_serv = atoi(argv[1]);
 	// ft_send(pid, pid_serv);
 	ft_send(argv[2], pid_serv);
-	if (strlen(argv[2]) == g_count)
+	if (ft_strlen(argv[2]) == g_count)
 	{
-		print miban;
+		write(1, "The message has been passed successfully", 40);
 	}
     return 0;
 }

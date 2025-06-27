@@ -7,5 +7,7 @@
 #include <unistd.h>
 
 char	*ft_itoa(int n);
+size_t	ft_strlen(const char *str);
+void	ft_write();
 
 #endif
