@@ -30,8 +30,8 @@ void	ft_send(char *str, pid_t pid_serv)
 	int		j;
 	float	delay;
 
-	i = 0;
-	delay = 0.7;
+	i = 0; 
+	delay = 0.2;
 	mask = 1;
 	while (str[i] != '\0')
 	{
