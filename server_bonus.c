@@ -2,8 +2,8 @@
 
 void	sig_handler(int signal, siginfo_t *info, void *context)
 {
-	static char	val;
-	static char	count;
+	static unsigned char	val;
+	static char				count;
 
 	(void)context;
 	if (signal == SIGUSR1)
@@ -23,7 +23,7 @@ void	sig_handler(int signal, siginfo_t *info, void *context)
 		val = 0;
 		count = 0;
 	}
-	kill(info->si_pid, SIGUSR1);
+	kill(info->si_pid, signal);
 }
 
 void	ft_putpid(int n)
